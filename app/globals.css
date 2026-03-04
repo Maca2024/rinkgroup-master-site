@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-navy: #142242;
+  --color-navy-deep: #0B1629;
+  --color-navy-light: #1C3058;
+  --color-rose-gold: #C5956B;
+  --color-rose-gold-light: #D4A574;
+  --color-rose-gold-pale: #E8CDB5;
+  --color-cream: #F5F0E8;
+  --color-cream-dark: #E8DFD0;
+  --color-charcoal: #2A2A2A;
+  --font-serif: 'Cormorant Garamond', 'Georgia', serif;
+  --font-sans: 'Outfit', 'Helvetica Neue', sans-serif;
+  --font-display: 'Playfair Display', 'Georgia', serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-navy-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-rose-gold);
+  border-radius: 3px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-rose-gold);
+  color: var(--color-navy-deep);
+}
+
+/* Noise overlay */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Rose gold gradient text */
+.text-rose-gradient {
+  background: linear-gradient(135deg, #C5956B 0%, #D4A574 40%, #E8CDB5 60%, #C5956B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shimmer animation for gold elements */
+.shimmer {
+  background: linear-gradient(
+    110deg,
+    #C5956B 0%,
+    #D4A574 20%,
+    #E8CDB5 40%,
+    #D4A574 60%,
+    #C5956B 80%,
+    #D4A574 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Divider line */
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-rose-gold), transparent);
+}
+
+/* Glass effect */
+.glass-navy {
+  background: rgba(20, 34, 66, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(197, 149, 107, 0.1);
+}
