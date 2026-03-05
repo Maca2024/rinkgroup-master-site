@@ -13,6 +13,7 @@ import { Footer } from './components/Footer';
 import { SmoothScroll } from './components/SmoothScroll';
 import { ScrollProgress } from './components/ScrollProgress';
 import { CustomCursor } from './components/CustomCursor';
+import { AetherBot } from './components/AetherBot';
 
 export default function Home() {
   return (
@@ -39,6 +40,7 @@ export default function Home() {
         <ContactSection />
       </main>
       <Footer />
+      <AetherBot />
     </LanguageProvider>
   );
 }

@@ -1,4 +1,4 @@
-export type Locale = 'en' | 'fi' | 'ar';
+export type Locale = 'en' | 'nl' | 'fi' | 'ar';
 
 export interface Translations {
   nav: {
@@ -68,6 +68,7 @@ export interface Translations {
   };
   langSwitch: {
     en: string;
+    nl: string;
     fi: string;
     ar: string;
   };
@@ -178,6 +179,117 @@ export const translations: Record<Locale, Translations> = {
     },
     langSwitch: {
       en: 'EN',
+      nl: 'NL',
+      fi: 'FI',
+      ar: 'عربي',
+    },
+  },
+
+  nl: {
+    nav: {
+      vision: 'Visie',
+      ventures: 'Ondernemingen',
+      heritage: 'Erfgoed',
+      philanthropy: 'Stichting',
+      contact: 'Contact',
+    },
+    hero: {
+      tagline: 'Strategische ondernemingen · Nordisch erfgoed · Wereldwijde ambitie',
+      established: 'Opgericht Finland — Nederland',
+      scroll: 'Scroll',
+    },
+    vision: {
+      label: 'Onze Filosofie',
+      headline: 'Nalatenschap bouwen die generaties overstijgt',
+      accentWord: 'overstijgt',
+      body1:
+        'Rink Group opereert op het kruispunt van Nordische innovatie en beproefde principes. Wij jagen geen trends na — wij bouwen structuren die waarde vermenigvuldigen over decennia, jurisdicties en generaties. Met een diep gevoel voor autonome systemen en systeemdenken ontwerpen wij oplossingen die zelfredzaam en adaptief zijn.',
+      body2:
+        'Van de oeroude taigawouden van Finland tot de handelscentra van Amsterdam weerspiegelt ons portfolio één overtuiging: dat het grootste rendement voortkomt uit geduld, integriteit en de moed om in eeuwen te denken. Wij implementeren, niet theoretiseren.',
+    },
+    marquee1: 'LUMEN FELICIS',
+    marquee2: 'TECHNOLOGIE · NATUUR · MARITIEM · CONSULTING · FILANTROPIE',
+    pillars: {
+      label: 'Portfolio',
+      title: 'Onze',
+      titleAccent: 'Ondernemingen',
+      items: [
+        {
+          number: 'I',
+          title: 'Technologie',
+          subtitle: 'AetherLink B.V.',
+          body: 'AI-consulting en intelligente automatisering. Wij ontwerpen systemen die ondernemingen transformeren tot adaptieve, zelfoptimaliserende organismen. Van agent-ecosystemen tot strategische digitale transformatie — met een diepgaand begrip van autonome systemen en systeemdenken.',
+          stat: '€225/uur',
+          statLabel: 'consultingtarief',
+        },
+        {
+          number: 'II',
+          title: 'Natuur',
+          subtitle: 'TaigaSchool',
+          body: 'Regeneratieve eco-gastvrijheid in de wildernis van Kuusamo. Boutique cabins, noorderlicht-ervaringen en diepe onderdompeling in het woud. Waar oeroude taiga hedendaags toevluchtsoord ontmoet.',
+          stat: '180 ha',
+          statLabel: 'ongerept bos',
+        },
+        {
+          number: 'III',
+          title: 'Maritiem',
+          subtitle: 'Van Diemen AOS',
+          body: 'Geavanceerde scheepsrecycling en maritieme ontmanteling. Pionier in duurzame end-of-life oplossingen voor de wereldvloot met Primal AOS-methodologie. Verantwoorde sloop die maritiem erfgoed omzet in herwinbare waarde.',
+          stat: '€50K',
+          statLabel: 'eerste contract',
+        },
+        {
+          number: 'IV',
+          title: 'Consulting',
+          subtitle: 'WorldLine · Senior AI',
+          body: 'Senior AI-consulting voor WorldLine, een van Europa\'s toonaangevende betaaltechnologiebedrijven. Systeemarchitectuur, autonoom agent-design en enterprise-grade AI-implementatie op het hoogste niveau.',
+          stat: '2026',
+          statLabel: 'actieve opdracht',
+        },
+        {
+          number: 'V',
+          title: 'Platform',
+          subtitle: 'Solvari Design',
+          body: 'Design system-architectuur en AI-integratie voor het grootste woningverbeteringsplatform van de Benelux. Apple-geïnspireerde designtaal, agent-ready infrastructuur.',
+          stat: '2026',
+          statLabel: 'design systeem',
+        },
+      ],
+    },
+    heritage: {
+      label: 'Ons Erfgoed',
+      motto: '\u201CLumen Felicis\u201D',
+      mottoTranslation: 'Het Licht van Fortuin',
+      values: [
+        { latin: 'Prudentia', english: 'Bezonnenheid', icon: '◈', text: 'Wij meten tweemaal en handelen met overtuiging. Strategisch geduld is ons concurrentievoordeel.' },
+        { latin: 'Integritas', english: 'Integriteit', icon: '◇', text: 'Ons woord is onze overeenkomst. In elke jurisdictie, elk partnerschap, elke handdruk.' },
+        { latin: 'Fortitudo', english: 'Standvastigheid', icon: '△', text: 'Wij bouwen voor decennia, niet voor kwartalen. Ware welvaart groeit door veerkracht.' },
+        { latin: 'Humanitas', english: 'Menselijkheid', icon: '○', text: 'Technologie dient mensen. Natuur koestert mensen. Elk levend wezen verdient waardigheid.' },
+      ],
+    },
+    philanthropy: {
+      label: 'Stichting',
+      title: 'De Levens Die',
+      titleAccent: 'Er Het Meest Toe Doen',
+      intro: 'Voorbij zakelijke belangen draagt Rink Group een fundamentele toewijding aan het welzijn van hen die niet voor zichzelf kunnen spreken. Onze filantropische missie is diep persoonlijk en niet-onderhandelbaar.',
+      dogTitle: 'Hondenwelzijn Initiatief',
+      dogBody: 'Het leven, welzijn en de waardigheid van honden is een van onze kernfundamentele doelen. Wij geloven dat een beschaving wordt gemeten aan hoe zij haar meest loyale metgezellen behandelt. Van reddingsoperaties tot asielfinanciering, van toegang tot dierenartsen tot belangenbehartiging — wij investeren in een wereld waarin elke hond veiligheid, warmte en liefde kent.',
+      dogStat: '∞',
+      dogStatLabel: 'onvoorwaardelijk',
+      quote: '"De grootheid van een natie kan worden afgemeten aan de manier waarop haar dieren worden behandeld." — Mahatma Gandhi',
+    },
+    contact: {
+      label: 'Contact',
+      title: 'Begin het',
+      titleAccent: 'gesprek',
+      body: 'Voor samenwerkingsvragen, investeringskansen of strategische samenwerking.',
+    },
+    footer: {
+      copyright: 'Rink Group OY',
+    },
+    langSwitch: {
+      en: 'EN',
+      nl: 'NL',
       fi: 'FI',
       ar: 'عربي',
     },
@@ -287,6 +399,7 @@ export const translations: Record<Locale, Translations> = {
     },
     langSwitch: {
       en: 'EN',
+      nl: 'NL',
       fi: 'FI',
       ar: 'عربي',
     },
@@ -396,6 +509,7 @@ export const translations: Record<Locale, Translations> = {
     },
     langSwitch: {
       en: 'EN',
+      nl: 'NL',
       fi: 'FI',
       ar: 'عربي',
     },

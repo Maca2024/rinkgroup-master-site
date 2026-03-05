@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageContext';
 import type { Locale } from '../i18n/translations';
 
-const locales: Locale[] = ['en', 'fi', 'ar'];
+const locales: Locale[] = ['en', 'nl', 'fi', 'ar'];
 
 export function LanguageSwitcher() {
   const { locale, setLocale, t } = useLanguage();
