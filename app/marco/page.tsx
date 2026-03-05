@@ -7,6 +7,7 @@ import { SmoothScroll } from '../components/SmoothScroll';
 import { ScrollProgress } from '../components/ScrollProgress';
 import { CustomCursor } from '../components/CustomCursor';
 import { AetherBot } from '../components/AetherBot';
+import { MarcoCanvas } from '../components/marco/MarcoCanvas';
 import { MarcoHero } from '../components/marco/MarcoHero';
 import { MarcoTimeline } from '../components/marco/MarcoTimeline';
 import { MarcoPhilosophy } from '../components/marco/MarcoPhilosophy';
@@ -15,6 +16,7 @@ import { MarcoWilderness } from '../components/marco/MarcoWilderness';
 export default function MarcoPage() {
   return (
     <LanguageProvider>
+      <MarcoCanvas />
       <SmoothScroll />
       <ScrollProgress />
       <CustomCursor />
