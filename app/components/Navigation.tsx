@@ -15,6 +15,7 @@ export function Navigation() {
     { label: t.nav.ventures, href: '#ventures' },
     { label: t.nav.heritage, href: '#heritage' },
     { label: t.nav.philanthropy, href: '#philanthropy' },
+    { label: 'The Founder', href: '/marco' },
     { label: t.nav.contact, href: '#contact' },
   ];
 
