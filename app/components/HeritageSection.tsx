@@ -2,13 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
-const values = [
-  { latin: 'Prudentia', english: 'Prudence', icon: '◈', text: 'We measure twice and act with conviction. Strategic patience is our competitive advantage.' },
-  { latin: 'Integritas', english: 'Integrity', icon: '◇', text: 'Our word is our bond. In every jurisdiction, every partnership, every handshake.' },
-  { latin: 'Fortitudo', english: 'Fortitude', icon: '△', text: 'We build for decades, not quarters. True wealth compounds through resilience.' },
-  { latin: 'Humanitas', english: 'Humanity', icon: '○', text: 'Technology serves people. Nature nurtures people. Business connects people.' },
-];
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function HeritageSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -19,6 +13,7 @@ export function HeritageSection() {
 
   const quoteY = useTransform(scrollYProgress, [0, 1], [60, -60]);
   const lineScale = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
+  const { t, isRTL } = useLanguage();
 
   return (
     <section id="heritage" ref={sectionRef} className="relative py-32 md:py-48 overflow-hidden">
@@ -38,7 +33,7 @@ export function HeritageSection() {
             transition={{ duration: 1 }}
             className="font-[family-name:var(--font-sans)] text-[10px] tracking-[0.5em] uppercase text-rose-gold/40 block mb-10"
           >
-            Our Heritage
+            {t.heritage.label}
           </motion.span>
 
           <motion.div
@@ -48,10 +43,10 @@ export function HeritageSection() {
             transition={{ duration: 1.2, delay: 0.2 }}
           >
             <p className="font-[family-name:var(--font-display)] text-5xl md:text-7xl lg:text-8xl text-rose-gradient italic font-light">
-              &ldquo;Lumen Felicis&rdquo;
+              {t.heritage.motto}
             </p>
             <p className="font-[family-name:var(--font-serif)] text-lg md:text-xl text-cream/25 mt-6 tracking-wide">
-              The Light of Fortune
+              {t.heritage.mottoTranslation}
             </p>
           </motion.div>
 
@@ -62,7 +57,7 @@ export function HeritageSection() {
 
         {/* Values — staggered asymmetric layout */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-          {values.map((v, i) => (
+          {t.heritage.values.map((v, i) => (
             <motion.div
               key={v.latin}
               initial={{ opacity: 0, y: 40 }}
@@ -74,7 +69,7 @@ export function HeritageSection() {
               }`}
             >
               {/* Corner ornament */}
-              <span className="absolute top-3 right-4 font-[family-name:var(--font-serif)] text-lg text-rose-gold/[0.08] group-hover:text-rose-gold/20 transition-colors duration-700">
+              <span className={`absolute top-3 font-[family-name:var(--font-serif)] text-lg text-rose-gold/[0.08] group-hover:text-rose-gold/20 transition-colors duration-700 ${isRTL ? 'left-4' : 'right-4'}`}>
                 {v.icon}
               </span>
 
@@ -84,7 +79,7 @@ export function HeritageSection() {
               <span className="font-[family-name:var(--font-sans)] text-[9px] tracking-[0.35em] uppercase text-cream/20 block mb-6">
                 {v.english}
               </span>
-              <p className="font-[family-name:var(--font-serif)] text-base md:text-lg text-cream/35 leading-relaxed group-hover:text-cream/55 transition-colors duration-500">
+              <p className={`font-[family-name:var(--font-serif)] text-base md:text-lg text-cream/35 leading-relaxed group-hover:text-cream/55 transition-colors duration-500 ${isRTL ? 'text-right' : ''}`}>
                 {v.text}
               </p>
             </motion.div>

@@ -1,6 +1,10 @@
 'use client';
 
+import { useLanguage } from '../i18n/LanguageContext';
+
 export function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="relative py-14 border-t border-rose-gold/[0.04]">
       <div className="max-w-7xl mx-auto px-6">
@@ -23,7 +27,7 @@ export function Footer() {
           </div>
 
           <span className="font-[family-name:var(--font-sans)] text-[9px] tracking-[0.15em] text-cream/10">
-            &copy; {new Date().getFullYear()} Rink Group OY
+            &copy; {new Date().getFullYear()} {t.footer.copyright}
           </span>
         </div>
       </div>

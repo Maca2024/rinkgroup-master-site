@@ -2,17 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const links = [
-  { label: 'Vision', href: '#vision' },
-  { label: 'Ventures', href: '#ventures' },
-  { label: 'Heritage', href: '#heritage' },
-  { label: 'Contact', href: '#contact' },
-];
+import { useLanguage } from '../i18n/LanguageContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const links = [
+    { label: t.nav.vision, href: '#vision' },
+    { label: t.nav.ventures, href: '#ventures' },
+    { label: t.nav.heritage, href: '#heritage' },
+    { label: t.nav.philanthropy, href: '#philanthropy' },
+    { label: t.nav.contact, href: '#contact' },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -39,11 +43,11 @@ export function Navigation() {
             </span>
           </a>
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-10">
+          {/* Desktop links + language switcher */}
+          <div className="hidden md:flex items-center gap-8">
             {links.map((link, i) => (
               <motion.a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -54,6 +58,9 @@ export function Navigation() {
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-rose-gold group-hover:w-full transition-all duration-500" />
               </motion.a>
             ))}
+            <div className="border-l border-rose-gold/10 pl-4 ml-2">
+              <LanguageSwitcher />
+            </div>
           </div>
 
           {/* Mobile hamburger */}
@@ -85,11 +92,11 @@ export function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-navy-deep/95 backdrop-blur-xl flex flex-col items-center justify-center gap-10 md:hidden"
+            className="fixed inset-0 z-40 bg-navy-deep/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden"
           >
             {links.map((link, i) => (
               <motion.a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -101,6 +108,9 @@ export function Navigation() {
                 {link.label}
               </motion.a>
             ))}
+            <div className="mt-6">
+              <LanguageSwitcher />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

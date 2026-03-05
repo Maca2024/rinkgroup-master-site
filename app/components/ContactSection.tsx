@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function ContactSection() {
   const ref = useRef<HTMLElement>(null);
@@ -12,6 +13,7 @@ export function ContactSection() {
 
   const circleScale = useTransform(scrollYProgress, [0.2, 0.7], [0, 1.5]);
   const circleOpacity = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0, 0.04, 0]);
+  const { t } = useLanguage();
 
   return (
     <section id="contact" ref={ref} className="relative py-40 md:py-56 overflow-hidden">
@@ -32,7 +34,7 @@ export function ContactSection() {
           transition={{ duration: 1 }}
           className="font-[family-name:var(--font-sans)] text-[10px] tracking-[0.5em] uppercase text-rose-gold/40 block mb-8"
         >
-          Connect
+          {t.contact.label}
         </motion.span>
 
         <motion.h2
@@ -42,7 +44,7 @@ export function ContactSection() {
           transition={{ duration: 1, delay: 0.1 }}
           className="font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl font-light text-cream leading-[1.1] mb-6"
         >
-          Begin the <span className="text-rose-gradient italic">conversation</span>
+          {t.contact.title} <span className="text-rose-gradient italic">{t.contact.titleAccent}</span>
         </motion.h2>
 
         <motion.p
@@ -52,7 +54,7 @@ export function ContactSection() {
           transition={{ duration: 0.8, delay: 0.25 }}
           className="font-[family-name:var(--font-serif)] text-lg md:text-xl text-cream/30 max-w-md mx-auto mb-14"
         >
-          For partnership inquiries, investment opportunities, or strategic collaboration.
+          {t.contact.body}
         </motion.p>
 
         {/* CTA */}
@@ -71,7 +73,7 @@ export function ContactSection() {
             info@rinkgroup.io
           </span>
           <svg
-            className="w-4 h-4 text-rose-gold/40 group-hover:text-rose-gold group-hover:translate-x-1.5 transition-all duration-500"
+            className="w-4 h-4 text-rose-gold/40 group-hover:text-rose-gold group-hover:translate-x-1.5 transition-all duration-500 rtl:rotate-180"
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />

@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
 import { ParticleLaurel } from './ParticleLaurel';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function HeroSection() {
   const ref = useRef<HTMLElement>(null);
@@ -16,6 +17,7 @@ export function HeroSection() {
   const logoOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const logoY = useTransform(scrollYProgress, [0, 0.5], [0, -60]);
   const overlayOpacity = useTransform(scrollYProgress, [0.3, 0.8], [0, 1]);
+  const { t } = useLanguage();
 
   return (
     <section ref={ref} className="relative h-[140vh]">
@@ -76,7 +78,7 @@ export function HeroSection() {
             transition={{ duration: 1, delay: 2.2 }}
             className="font-[family-name:var(--font-sans)] text-[10px] md:text-xs tracking-[0.4em] uppercase text-cream/30 text-center px-6"
           >
-            Strategic Ventures &middot; Nordic Heritage &middot; Global Ambition
+            {t.hero.tagline}
           </motion.p>
 
           <motion.p
@@ -85,7 +87,7 @@ export function HeroSection() {
             transition={{ duration: 1, delay: 2.6 }}
             className="font-[family-name:var(--font-serif)] text-base md:text-lg text-cream/20 italic mt-4"
           >
-            Est. Finland &mdash; Netherlands
+            {t.hero.established}
           </motion.p>
         </motion.div>
 
@@ -98,7 +100,7 @@ export function HeroSection() {
           className="absolute bottom-8 md:bottom-12 z-10 flex flex-col items-center"
         >
           <span className="font-[family-name:var(--font-sans)] text-[9px] tracking-[0.5em] uppercase text-cream/15 mb-3">
-            Scroll
+            {t.hero.scroll}
           </span>
           <motion.div
             animate={{ y: [0, 10, 0] }}

@@ -127,3 +127,22 @@ a, button, [role="button"], input, select, textarea { cursor: none; }
   from { clip-path: inset(100% 0 0 0); transform: translateY(20px); }
   to { clip-path: inset(0 0 0 0); transform: translateY(0); }
 }
+
+/* RTL support for Arabic */
+[dir="rtl"] {
+  font-family: var(--font-arabic), var(--font-sans), sans-serif;
+}
+[dir="rtl"] .tracking-\[0\.5em\],
+[dir="rtl"] .tracking-\[0\.4em\],
+[dir="rtl"] .tracking-\[0\.3em\],
+[dir="rtl"] .tracking-\[0\.25em\],
+[dir="rtl"] .tracking-\[0\.2em\],
+[dir="rtl"] .tracking-\[0\.15em\] {
+  letter-spacing: 0.05em;
+}
+.direction-rtl {
+  direction: rtl;
+}
+.rtl\:rotate-180:where([dir="rtl"] *) {
+  transform: rotate(180deg);
+}

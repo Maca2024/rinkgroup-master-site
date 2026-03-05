@@ -2,8 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
-const words = 'Building legacies that transcend generations'.split(' ');
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function VisionSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -12,17 +11,20 @@ export function VisionSection() {
     offset: ['start 0.8', 'start 0.2'],
   });
 
+  const { t, isRTL } = useLanguage();
+  const words = t.vision.headline.split(' ');
+
   return (
-    <section ref={sectionRef} className="relative py-32 md:py-48">
+    <section id="vision" ref={sectionRef} className="relative py-32 md:py-48">
       <div className="max-w-6xl mx-auto px-6">
         {/* Scroll-revealed heading */}
         <div className="mb-8">
-          <span className="font-[family-name:var(--font-sans)] text-[10px] tracking-[0.5em] uppercase text-rose-gold/40 block mb-8">
-            Our Philosophy
+          <span className={`font-[family-name:var(--font-sans)] text-[10px] tracking-[0.5em] uppercase text-rose-gold/40 block mb-8 ${isRTL ? 'text-right' : ''}`}>
+            {t.vision.label}
           </span>
         </div>
 
-        <h2 className="flex flex-wrap gap-x-4 md:gap-x-6 font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-8xl font-light leading-[1.15] mb-6">
+        <h2 className={`flex flex-wrap gap-x-4 md:gap-x-6 font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-8xl font-light leading-[1.15] mb-6 ${isRTL ? 'justify-end' : ''}`}>
           {words.map((word, i) => {
             const start = i / words.length;
             const end = start + 1 / words.length;
@@ -33,7 +35,7 @@ export function VisionSection() {
                 word={word}
                 range={[start, end]}
                 progress={scrollYProgress}
-                isAccent={word === 'transcend'}
+                isAccent={word === t.vision.accentWord}
               />
             );
           })}
@@ -44,7 +46,7 @@ export function VisionSection() {
           whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="gold-line w-24 origin-left mt-10 mb-20"
+          className={`gold-line w-24 mt-10 mb-20 ${isRTL ? 'origin-right ml-auto' : 'origin-left'}`}
         />
 
         {/* Philosophy body */}
@@ -54,11 +56,9 @@ export function VisionSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.8 }}
-            className="font-[family-name:var(--font-serif)] text-xl md:text-2xl text-cream/50 leading-relaxed"
+            className={`font-[family-name:var(--font-serif)] text-xl md:text-2xl text-cream/50 leading-relaxed ${isRTL ? 'text-right' : ''}`}
           >
-            Rink Group operates at the intersection of Nordic innovation and time-tested principles.
-            We don&apos;t chase trends — we build structures that compound value across decades,
-            jurisdictions, and generations.
+            {t.vision.body1}
           </motion.p>
 
           <motion.p
@@ -66,11 +66,9 @@ export function VisionSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="font-[family-name:var(--font-serif)] text-xl md:text-2xl text-cream/50 leading-relaxed"
+            className={`font-[family-name:var(--font-serif)] text-xl md:text-2xl text-cream/50 leading-relaxed ${isRTL ? 'text-right' : ''}`}
           >
-            From the ancient taiga forests of Finland to the trading floors of Amsterdam,
-            our portfolio reflects a singular conviction: that the greatest returns flow
-            from patience, integrity, and the courage to think in centuries.
+            {t.vision.body2}
           </motion.p>
         </div>
       </div>
