@@ -234,6 +234,32 @@ export function HeroSection() {
         {/* Particle wreath */}
         <ParticleLaurel />
 
+        {/* Concentric pulse rings — beacon effect behind logo */}
+        <div className="absolute inset-0 z-[1] pointer-events-none flex items-center justify-center">
+          {[0, 1, 2].map((i) => (
+            <motion.span
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                border: '1px solid rgba(197,149,107,0.18)',
+                width: 220,
+                height: 220,
+              }}
+              animate={{
+                scale: [0.4, 2.5],
+                opacity: [0.06, 0],
+              }}
+              transition={{
+                duration: 6,
+                delay: i * 2,
+                repeat: Infinity,
+                ease: [0.16, 1, 0.3, 1],
+                repeatDelay: 0,
+              }}
+            />
+          ))}
+        </div>
+
         {/* Ambient light particles (float upward) */}
         <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
           {ambientParticles.map(p => (

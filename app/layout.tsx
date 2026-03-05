@@ -32,7 +32,7 @@ const notoArabic = Noto_Sans_Arabic({
 
 export const metadata: Metadata = {
   title: 'Rink Group | Lumen Felicis',
-  description: 'Strategic holding company bridging Nordic innovation with global ambition. Technology, AI consulting, maritime, and sustainable ventures across Finland, Netherlands, and beyond.',
+  description: 'Strategic holding company bridging Nordic innovation with global ambition. Technology, AI consulting, adventure, and enterprise AI automation across Finland, Netherlands, and beyond.',
   openGraph: {
     title: 'Rink Group | Lumen Felicis',
     description: 'Strategic holding company bridging Nordic innovation with global ambition.',

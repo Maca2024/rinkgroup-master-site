@@ -14,10 +14,15 @@ import { SmoothScroll } from './components/SmoothScroll';
 import { ScrollProgress } from './components/ScrollProgress';
 import { CustomCursor } from './components/CustomCursor';
 import { AetherBot } from './components/AetherBot';
+import { LoadingScreen } from './components/LoadingScreen';
+import { AmbientOrbs } from './components/AmbientOrbs';
+import { SectionDivider } from './components/SectionDivider';
 
 export default function Home() {
   return (
     <LanguageProvider>
+      <LoadingScreen />
+      <AmbientOrbs />
       <SmoothScroll />
       <ScrollProgress />
       <CustomCursor />
@@ -29,14 +34,18 @@ export default function Home() {
           className="text-rose-gold/[0.04] border-y border-rose-gold/[0.04]"
         />
         <VisionSection />
+        <SectionDivider variant="diamond" />
         <MarqueeBand
           textKey="marquee2"
           reverse
           className="text-cream/[0.03]"
         />
         <PillarsSection />
+        <SectionDivider variant="lines" />
         <HeritageSection />
+        <SectionDivider variant="particles" />
         <PhilanthropySection />
+        <SectionDivider variant="diamond" />
         <ContactSection />
       </main>
       <Footer />

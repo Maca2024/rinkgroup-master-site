@@ -128,6 +128,90 @@ a, button, [role="button"], input, select, textarea { cursor: none; }
   to { clip-path: inset(0 0 0 0); transform: translateY(0); }
 }
 
+/* Working noise overlay on body */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Gradient border animation for luxury cards */
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(197, 149, 107, 0.08); }
+  50% { border-color: rgba(197, 149, 107, 0.2); }
+}
+.border-glow-animate {
+  animation: borderGlow 4s ease-in-out infinite;
+}
+
+/* Text glow effect */
+.text-glow {
+  text-shadow: 0 0 20px rgba(197, 149, 107, 0.3), 0 0 40px rgba(197, 149, 107, 0.1);
+}
+
+/* Subtle float animation */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.gentle-float {
+  animation: gentleFloat 6s ease-in-out infinite;
+}
+
+/* Aurora gradient animation */
+@keyframes auroraShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.aurora-bg {
+  background-size: 400% 400%;
+  animation: auroraShift 15s ease infinite;
+}
+
+/* Stagger children entrance */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Aurora animation bands for Contact section */
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5%, -3%) scale(1.05); }
+  66% { transform: translate(-3%, 4%) scale(0.97); }
+}
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate(-6%, 5%) rotate(3deg) scale(1.08); }
+}
+@keyframes aurora-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(4%, -5%) scale(1.04); }
+  80% { transform: translate(-3%, 2%) scale(0.96); }
+}
+
+/* Heritage section flight path dashes */
+@keyframes dashMarch {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -32; }
+}
+
 /* RTL support for Arabic */
 [dir="rtl"] {
   font-family: var(--font-arabic), var(--font-sans), sans-serif;

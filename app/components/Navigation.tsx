@@ -1,13 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
+// Section IDs that map to # hrefs for IntersectionObserver
+const SECTION_IDS = ['vision', 'ventures', 'heritage', 'philanthropy', 'contact'];
+
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
   const { t } = useLanguage();
 
   const links = [
@@ -19,11 +25,56 @@ export function Navigation() {
     { label: t.nav.contact, href: '#contact' },
   ];
 
+  // Scroll depth detection
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // IntersectionObserver — detect which section is in view
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry with the largest intersection ratio that is currently intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      { threshold: [0.2, 0.4, 0.6], rootMargin: '-10% 0px -10% 0px' }
+    );
+
+    SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observerRef.current?.observe(el);
+    });
+
+    return () => observerRef.current?.disconnect();
+  }, []);
+
+  // Smooth scroll handler for anchor links
+  const handleAnchorClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (!href.startsWith('#')) return;
+      e.preventDefault();
+      const id = href.slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      setMobileOpen(false);
+    },
+    []
+  );
+
+  // Determine if a link is active
+  const isActive = (href: string) => {
+    if (!href.startsWith('#')) return false;
+    return activeSection === href.slice(1);
+  };
 
   return (
     <>
@@ -38,27 +89,88 @@ export function Navigation() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          {/* Logo — glows when scrolled */}
           <a href="/" className="flex items-center gap-3 group">
-            <span className="font-[family-name:var(--font-display)] text-xl tracking-[0.2em] text-rose-gold-light group-hover:text-rose-gold-pale transition-colors duration-500">
+            <span
+              className="font-[family-name:var(--font-display)] text-xl tracking-[0.2em] text-rose-gold-light group-hover:text-rose-gold-pale transition-all duration-500"
+              style={
+                scrolled
+                  ? {
+                      textShadow:
+                        '0 0 18px rgba(197,149,107,0.35), 0 0 36px rgba(197,149,107,0.12)',
+                    }
+                  : undefined
+              }
+            >
               RINK GROUP
             </span>
           </a>
 
           {/* Desktop links + language switcher */}
           <div className="hidden md:flex items-center gap-8">
-            {links.map((link, i) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2.2 + i * 0.1 }}
-                className="font-[family-name:var(--font-sans)] text-sm tracking-[0.15em] uppercase text-cream/60 hover:text-rose-gold-light transition-colors duration-500 relative group"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-rose-gold group-hover:w-full transition-all duration-500" />
-              </motion.a>
-            ))}
+            {links.map((link, i) => {
+              const active = isActive(link.href);
+              const hovered = hoveredLink === link.href;
+
+              return (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => handleAnchorClick(e, link.href)}
+                  onMouseEnter={() => setHoveredLink(link.href)}
+                  onMouseLeave={() => setHoveredLink(null)}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 2.2 + i * 0.1 }}
+                  className="font-[family-name:var(--font-sans)] text-sm tracking-[0.15em] uppercase transition-colors duration-500 relative group overflow-hidden"
+                  style={{
+                    color: active
+                      ? 'rgba(197,149,107,0.9)'
+                      : hovered
+                        ? 'rgba(212,165,116,1)'
+                        : 'rgba(245,240,232,0.6)',
+                  }}
+                >
+                  {/* Shimmer sweep on hover */}
+                  <AnimatePresence>
+                    {hovered && (
+                      <motion.span
+                        key="shimmer"
+                        initial={{ x: '-110%', opacity: 0.6 }}
+                        animate={{ x: '110%', opacity: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background:
+                            'linear-gradient(110deg, transparent 20%, rgba(197,149,107,0.25) 50%, transparent 80%)',
+                          borderRadius: 2,
+                        }}
+                      />
+                    )}
+                  </AnimatePresence>
+
+                  {link.label}
+
+                  {/* Golden underline — active state or hover */}
+                  <motion.span
+                    className="absolute -bottom-1 left-0 h-px origin-left"
+                    animate={{
+                      scaleX: active ? 1 : hovered ? 1 : 0,
+                      opacity: active ? 1 : hovered ? 0.7 : 0,
+                    }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      width: '100%',
+                      background: active
+                        ? 'linear-gradient(90deg, #C5956B, #E0B88A, #C5956B)'
+                        : 'rgba(197,149,107,0.7)',
+                      boxShadow: active ? '0 0 6px rgba(197,149,107,0.4)' : 'none',
+                    }}
+                  />
+                </motion.a>
+              );
+            })}
             <div className="border-l border-rose-gold/10 pl-4 ml-2">
               <LanguageSwitcher />
             </div>
@@ -103,8 +215,13 @@ export function Navigation() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 30 }}
                 transition={{ delay: i * 0.08 }}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => handleAnchorClick(e, link.href)}
                 className="font-[family-name:var(--font-display)] text-3xl tracking-[0.15em] text-rose-gold-light hover:text-rose-gold-pale transition-colors"
+                style={
+                  isActive(link.href)
+                    ? { textShadow: '0 0 20px rgba(197,149,107,0.4)' }
+                    : undefined
+                }
               >
                 {link.label}
               </motion.a>
