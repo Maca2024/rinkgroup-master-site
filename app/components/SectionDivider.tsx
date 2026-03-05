@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useInView } from 'framer-motion';
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 
 // ---------------------------------------------------------------------------
 // Design tokens
@@ -99,6 +99,23 @@ function LinesVariant() {
 function DiamondVariant() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Scale down on mobile: container 56px, rays shorter, diamond smaller
+  const containerSize = isMobile ? 56 : 80;
+  const primaryRayLength = isMobile ? 24 : 36;
+  const secondaryRayLength = isMobile ? 18 : 26;
+  const outerDiamondSize = isMobile ? 13 : 18;
+  const innerDiamondSize = isMobile ? 6 : 8;
+  const flankingLineWidth = isMobile ? 56 : 80;
 
   // 4 radiating lines at 0°, 90°, 180°, 270° plus 4 diagonal faint ones
   const rays = [0, 45, 90, 135, 180, 225, 270, 315];
@@ -108,10 +125,10 @@ function DiamondVariant() {
     <div
       ref={ref}
       className="flex items-center justify-center w-full"
-      style={{ height: '80px' }}
+      style={{ height: isMobile ? '64px' : '80px' }}
       aria-hidden="true"
     >
-      <div className="relative" style={{ width: '80px', height: '80px' }}>
+      <div className="relative" style={{ width: `${containerSize}px`, height: `${containerSize}px` }}>
         {/* Radiating lines */}
         {rays.map((angle) => {
           const isPrimary = primaryRays.includes(angle);
@@ -120,7 +137,7 @@ function DiamondVariant() {
               key={angle}
               className="absolute top-1/2 left-1/2"
               style={{
-                width: isPrimary ? '36px' : '26px',
+                width: isPrimary ? `${primaryRayLength}px` : `${secondaryRayLength}px`,
                 height: '1px',
                 background: `linear-gradient(90deg, ${ROSE_GOLD} 0%, transparent 100%)`,
                 opacity: isPrimary ? 0.7 : 0.3,
@@ -143,8 +160,8 @@ function DiamondVariant() {
         <motion.div
           className="absolute inset-0 m-auto"
           style={{
-            width: '18px',
-            height: '18px',
+            width: `${outerDiamondSize}px`,
+            height: `${outerDiamondSize}px`,
             border: `1px solid ${ROSE_GOLD}`,
             rotate: 45,
             boxShadow: `0 0 12px 2px rgba(197,149,107,0.3), inset 0 0 8px rgba(197,149,107,0.1)`,
@@ -158,8 +175,8 @@ function DiamondVariant() {
         <motion.div
           className="absolute inset-0 m-auto"
           style={{
-            width: '8px',
-            height: '8px',
+            width: `${innerDiamondSize}px`,
+            height: `${innerDiamondSize}px`,
             background: ROSE_GOLD,
             rotate: 45,
             boxShadow: `0 0 10px 3px rgba(197,149,107,0.6)`,
@@ -175,7 +192,7 @@ function DiamondVariant() {
             key={dir}
             className="absolute top-1/2"
             style={{
-              width: '80px',
+              width: `${flankingLineWidth}px`,
               height: '1px',
               background:
                 dir === -1
@@ -210,21 +227,35 @@ interface Particle {
 function ParticlesVariant() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Desktop: 30 particles — Mobile: 15 particles (reduced for performance)
+  const particleCount = isMobile ? 15 : 30;
 
   const particles = useMemo<Particle[]>(() => {
     // Deterministic seed so SSR and client match exactly (no Math.random)
     const seed = (n: number, offset: number) =>
       ((n * 1103515245 + offset) & 0x7fffffff) / 0x7fffffff;
 
-    return Array.from({ length: 30 }, (_, i) => ({
+    const count = particleCount;
+    const divisor = count - 1;
+    return Array.from({ length: count }, (_, i) => ({
       id: i,
-      x: (i / 29) * 100,                          // evenly spread across width
+      x: (i / divisor) * 100,                     // evenly spread across width
       offsetY: (seed(i, 12345) - 0.5) * 28,       // ±14px vertical scatter
       size: 2 + seed(i, 99999) * 3,               // 2–5px
       opacity: 0.25 + seed(i, 54321) * 0.55,      // 0.25–0.8
       delay: seed(i, 11111) * 0.4,                // 0–0.4s stagger
     }));
-  }, []);
+  }, [particleCount]);
 
   return (
     <div

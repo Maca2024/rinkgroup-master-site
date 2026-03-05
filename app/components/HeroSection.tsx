@@ -201,7 +201,14 @@ export function HeroSection() {
 
   const glowSize = 55 + Math.sin(glowPhase) * 8;
 
-  const ambientParticles = useAmbientParticles(22);
+  const [particleCount, setParticleCount] = useState(10);
+  useEffect(() => {
+    const update = () => setParticleCount(window.innerWidth < 768 ? 10 : 22);
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  const ambientParticles = useAmbientParticles(particleCount);
 
   return (
     <section ref={ref} className="relative h-[140vh]">

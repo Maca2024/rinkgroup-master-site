@@ -47,6 +47,7 @@ export function ParticleLaurel() {
   const prevMouseRef = useRef({ x: -9999, y: -9999 });
   const lastSparkRef = useRef(0);
   const orbitRotationRef = useRef(0);
+  const isMobileRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -75,12 +76,15 @@ export function ParticleLaurel() {
       ripplesRef.current = [];
       sparksRef.current = [];
 
+      const isMobile = w < 768;
+      isMobileRef.current = isMobile;
+
       cx = w / 2;
       cy = h * 0.40;
-      radius = Math.min(w, h) * (w < 768 ? 0.18 : 0.13);
+      radius = Math.min(w, h) * (isMobile ? 0.18 : 0.13);
 
       // ── Stars ──────────────────────────────────────────────────────────────
-      const starCount = Math.floor((w * h) / 5000);
+      const starCount = Math.min(Math.floor((w * h) / 5000), isMobile ? 60 : 300);
       for (let i = 0; i < starCount; i++) {
         starsRef.current.push({
           x: Math.random() * w,
@@ -92,9 +96,10 @@ export function ParticleLaurel() {
         });
       }
 
-      // ── Ring particles (300) ───────────────────────────────────────────────
-      for (let i = 0; i < 300; i++) {
-        const angle = (i / 300) * Math.PI * 2;
+      // ── Ring particles (300 desktop / 150 mobile) ─────────────────────────
+      const ringCount = isMobile ? 150 : 300;
+      for (let i = 0; i < ringCount; i++) {
+        const angle = (i / ringCount) * Math.PI * 2;
         const wave1 = Math.sin(angle * 8) * radius * 0.06;
         const wave2 = Math.cos(angle * 5) * radius * 0.04;
         const r = radius + wave1 + wave2;
@@ -115,9 +120,10 @@ export function ParticleLaurel() {
         });
       }
 
-      // ── Leaf clusters (60 × 8 = 480) ──────────────────────────────────────
-      for (let i = 0; i < 60; i++) {
-        const angle = (i / 60) * Math.PI * 2;
+      // ── Leaf clusters (60 × 8 = 480 desktop / 30 × 8 = 240 mobile) ────────
+      const leafClusterCount = isMobile ? 30 : 60;
+      for (let i = 0; i < leafClusterCount; i++) {
+        const angle = (i / leafClusterCount) * Math.PI * 2;
         const leafDir = angle + Math.PI / 2 + (Math.random() - 0.5) * 0.4;
         const leafLen = radius * (0.2 + Math.random() * 0.15);
         const baseR = radius + Math.sin(angle * 8) * radius * 0.06;
@@ -146,8 +152,9 @@ export function ParticleLaurel() {
         }
       }
 
-      // ── Floating dust (80) ─────────────────────────────────────────────────
-      for (let i = 0; i < 80; i++) {
+      // ── Floating dust (80 desktop / 40 mobile) ────────────────────────────
+      const dustCount = isMobile ? 40 : 80;
+      for (let i = 0; i < dustCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const dist = radius * (0.5 + Math.random() * 1.2);
         particlesRef.current.push({
@@ -210,7 +217,10 @@ export function ParticleLaurel() {
 
     // ── Spark emitter (called each frame near wreath) ──────────────────────────
     const maybeSpawnSpark = (time: number, orbitalRotation: number) => {
-      if (time - lastSparkRef.current < 200) return; // max 5 sparks/sec
+      const mobile = isMobileRef.current;
+      const minInterval = mobile ? 400 : 200;
+      const maxSparks = mobile ? 15 : 30;
+      if (time - lastSparkRef.current < minInterval) return;
       lastSparkRef.current = time;
 
       // Random position on the ring
@@ -235,7 +245,7 @@ export function ParticleLaurel() {
       });
 
       // Trim
-      if (sparksRef.current.length > 30) sparksRef.current.shift();
+      if (sparksRef.current.length > maxSparks) sparksRef.current.shift();
     };
 
     // ── Main draw loop ─────────────────────────────────────────────────────────

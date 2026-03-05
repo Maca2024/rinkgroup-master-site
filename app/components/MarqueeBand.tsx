@@ -150,7 +150,7 @@ export function MarqueeBand({
       <div className="relative">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 w-24 z-10"
+          className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-24 z-10"
           style={{
             background:
               'linear-gradient(90deg, #080E1A 0%, transparent 100%)',
@@ -158,7 +158,7 @@ export function MarqueeBand({
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-24 z-10"
+          className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-24 z-10"
           style={{
             background:
               'linear-gradient(270deg, #080E1A 0%, transparent 100%)',

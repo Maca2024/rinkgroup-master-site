@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageContext';
 
@@ -11,6 +11,14 @@ function scrollToTop() {
 export function Footer() {
   const { t } = useLanguage();
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // Detect touch/mobile device — only runs on client
+  useEffect(() => {
+    setIsTouchDevice(
+      window.matchMedia('(hover: none) and (pointer: coarse)').matches
+    );
+  }, []);
 
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
@@ -74,9 +82,9 @@ export function Footer() {
           </div>
 
           {/* Cities */}
-          <div className="flex items-center gap-4 md:gap-5 font-[family-name:var(--font-sans)] text-[9px] tracking-[0.25em] uppercase">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5 font-[family-name:var(--font-sans)] text-[9px] tracking-[0.25em] uppercase">
             {['Helsinki', 'Amsterdam', 'Kuusamo'].map((city, i) => (
-              <div key={city} className="flex items-center gap-4 md:gap-5">
+              <div key={city} className="flex items-center gap-3 md:gap-5">
                 <motion.span
                   className="text-cream/10 cursor-default"
                   whileHover={{
@@ -116,9 +124,9 @@ export function Footer() {
               {t.footer.copyright}
             </motion.span>
 
-            {/* Back to top — appears on footer hover */}
-            <AnimatePresence>
-              {isHovered && (
+            {/* Back to top — hover-triggered on desktop, always visible on touch */}
+            <AnimatePresence initial={false}>
+              {(isHovered || isTouchDevice) && (
                 <motion.button
                   key="back-to-top"
                   onClick={scrollToTop}
@@ -126,7 +134,7 @@ export function Footer() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex items-center justify-center w-7 h-7 border border-rose-gold/15 hover:border-rose-gold/40 transition-all duration-400 group magnetic-glow"
+                  className="flex items-center justify-center w-7 h-7 border border-rose-gold/15 hover:border-rose-gold/40 active:border-rose-gold/60 transition-all duration-400 group magnetic-glow touch-manipulation"
                   aria-label="Back to top"
                 >
                   <motion.svg

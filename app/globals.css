@@ -18,18 +18,38 @@
 
 html {
   scroll-behavior: smooth;
-  cursor: none;
 }
 
-/* Hide default cursor on interactive elements */
-a, button, [role="button"], input, select, textarea { cursor: none; }
+/* Custom cursor — only on pointer devices that support hover (not touchscreens) */
+@media (hover: hover) and (pointer: fine) {
+  html { cursor: none; }
+  a, button, [role="button"], input, select, textarea { cursor: none; }
+}
 
-/* Custom scrollbar */
+/* Custom scrollbar — desktop only */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--color-navy-deep); }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--color-rose-gold), var(--color-rose-gold-light));
   border-radius: 2px;
+}
+
+/* Hide scrollbar on mobile (some browsers show them by default) */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar { display: none; }
+  html { scrollbar-width: none; }
+}
+
+/* iOS safe-area insets — accounts for notch / Dynamic Island */
+@supports (padding: env(safe-area-inset-top)) {
+  .fixed.top-0 {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Prevent unwanted browser gestures on magnetic/interactive elements */
+[data-magnetic], .magnetic-glow {
+  touch-action: manipulation;
 }
 
 ::selection {
@@ -210,6 +230,16 @@ a, button, [role="button"], input, select, textarea { cursor: none; }
 @keyframes dashMarch {
   0% { stroke-dashoffset: 0; }
   100% { stroke-dashoffset: -32; }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation-duration: 0s !important; }
+  .shimmer { animation-duration: 0s !important; }
+  .gentle-float { animation: none !important; }
+  .border-glow-animate { animation: none !important; }
+  .aurora-bg { animation: none !important; }
+  .stagger-children > * { animation: none !important; opacity: 1 !important; }
 }
 
 /* RTL support for Arabic */

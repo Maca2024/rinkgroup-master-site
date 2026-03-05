@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useEffect, useCallback, useState, useLayoutEffect } from 'react';
 import {
   motion,
   useScroll,
@@ -160,9 +160,15 @@ function TiltCard({
   const rotateY = useMotionValue(0);
   const springX = useSpring(rotateX, { stiffness: 150, damping: 20 });
   const springY = useSpring(rotateY, { stiffness: 150, damping: 20 });
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useLayoutEffect(() => {
+    setIsTouchDevice('ontouchstart' in window);
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
+      if (isTouchDevice) return;
       const el = ref.current;
       if (!el) return;
       const { left, top, width, height } = el.getBoundingClientRect();
@@ -171,7 +177,7 @@ function TiltCard({
       rotateX.set(-cy * 10);
       rotateY.set(cx * 10);
     },
-    [rotateX, rotateY]
+    [rotateX, rotateY, isTouchDevice]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -182,8 +188,8 @@ function TiltCard({
   return (
     <motion.div
       ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={isTouchDevice ? undefined : handleMouseMove}
+      onMouseLeave={isTouchDevice ? undefined : handleMouseLeave}
       style={{
         rotateX: springX,
         rotateY: springY,

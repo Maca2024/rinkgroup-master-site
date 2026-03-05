@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
+import { useRef, useState, useCallback, useEffect, useMemo, useLayoutEffect } from 'react';
 import {
   motion,
   useScroll,
@@ -118,6 +118,11 @@ function PillarCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useLayoutEffect(() => {
+    setIsTouchDevice('ontouchstart' in window);
+  }, []);
 
   // Scroll-driven entrance
   const { scrollYProgress } = useScroll({
@@ -133,8 +138,9 @@ function PillarCard({
   const entranceOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 1]);
   const smoothX = useSpring(entranceX, { stiffness: 50, damping: 20 });
 
-  // 3D tilt on mouse move
+  // 3D tilt on mouse move — disabled on touch devices
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouchDevice) return;
     const rect = cardRef.current?.getBoundingClientRect();
     if (!rect) return;
     const cx = rect.left + rect.width / 2;
@@ -142,7 +148,7 @@ function PillarCard({
     const dx = (e.clientX - cx) / (rect.width / 2);
     const dy = (e.clientY - cy) / (rect.height / 2);
     setTilt({ x: -dy * 5, y: dx * 7 });
-  }, []);
+  }, [isTouchDevice]);
 
   const handleMouseLeave = useCallback(() => {
     setTilt({ x: 0, y: 0 });
@@ -179,14 +185,14 @@ function PillarCard({
           perspective: 800,
           transformStyle: 'preserve-3d',
         }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={handleMouseLeave}
+        onMouseMove={isTouchDevice ? undefined : handleMouseMove}
+        onMouseEnter={isTouchDevice ? undefined : () => setIsHovered(true)}
+        onMouseLeave={isTouchDevice ? undefined : handleMouseLeave}
         className="group relative overflow-hidden rounded-[2px] border border-[#C5956B]/[0.07] bg-[#080E1A]/60 px-8 py-10 md:px-12 md:py-14 magnetic-glow transition-colors duration-700 hover:border-[#C5956B]/[0.18] hover:bg-[#0F1B33]/70"
       >
         {/* ── Large watermark number ──────────────────────────────── */}
         <span
-          className={`pointer-events-none absolute font-[family-name:var(--font-display)] text-[10rem] md:text-[14rem] font-bold leading-none select-none ${isRTL ? 'left-6 top-0' : 'right-6 top-0'}`}
+          className={`pointer-events-none absolute font-[family-name:var(--font-display)] text-[6rem] md:text-[10rem] lg:text-[14rem] font-bold leading-none select-none ${isRTL ? 'left-6 top-0' : 'right-6 top-0'}`}
           style={{
             color: accentColor,
             opacity: 0.03,

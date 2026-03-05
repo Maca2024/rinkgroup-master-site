@@ -272,9 +272,20 @@ interface CornerOrnamentProps {
 }
 
 function CornerOrnament({ corner, delay }: CornerOrnamentProps) {
-  const size = 32;
+  const [size, setSize] = useState(20);
+  const [offset, setOffset] = useState(16);
   const thickness = 1;
-  const offset = 28;
+
+  useEffect(() => {
+    function update() {
+      const isMobile = window.innerWidth < 768;
+      setSize(isMobile ? 20 : 32);
+      setOffset(isMobile ? 16 : 28);
+    }
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   const posStyle: React.CSSProperties = {
     position: 'absolute',

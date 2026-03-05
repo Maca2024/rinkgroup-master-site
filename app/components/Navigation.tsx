@@ -32,6 +32,16 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   // IntersectionObserver — detect which section is in view
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -207,25 +217,42 @@ export function Navigation() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-40 bg-navy-deep/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden"
           >
-            {links.map((link, i) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 30 }}
-                transition={{ delay: i * 0.08 }}
-                onClick={(e) => handleAnchorClick(e, link.href)}
-                className="font-[family-name:var(--font-display)] text-3xl tracking-[0.15em] text-rose-gold-light hover:text-rose-gold-pale transition-colors"
-                style={
-                  isActive(link.href)
-                    ? { textShadow: '0 0 20px rgba(197,149,107,0.4)' }
-                    : undefined
-                }
-              >
-                {link.label}
-              </motion.a>
-            ))}
+            {links.map((link, i) => {
+              const active = isActive(link.href);
+              return (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 30 }}
+                  transition={{ delay: i * 0.08 }}
+                  onClick={(e) => handleAnchorClick(e, link.href)}
+                  className="font-[family-name:var(--font-display)] text-3xl tracking-[0.15em] transition-colors relative flex items-center gap-3"
+                  style={{
+                    color: active
+                      ? 'rgba(228,185,143,1)'
+                      : 'rgba(212,165,116,0.75)',
+                    textShadow: active
+                      ? '0 0 24px rgba(197,149,107,0.5), 0 0 48px rgba(197,149,107,0.2)'
+                      : undefined,
+                  }}
+                >
+                  {/* Active accent bar */}
+                  <motion.span
+                    className="block w-5 h-px origin-left flex-shrink-0"
+                    animate={{ scaleX: active ? 1 : 0, opacity: active ? 1 : 0 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background:
+                        'linear-gradient(90deg, #E4B98F, rgba(197,149,107,0.4))',
+                      boxShadow: '0 0 6px rgba(197,149,107,0.6)',
+                    }}
+                  />
+                  {link.label}
+                </motion.a>
+              );
+            })}
             <div className="mt-6">
               <LanguageSwitcher />
             </div>

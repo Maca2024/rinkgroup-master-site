@@ -364,7 +364,7 @@ function WalkingPaw({ index, total }: { index: number; total: number }) {
         filter: 'drop-shadow(0 0 4px rgba(197,149,107,0.14))',
       }}
     >
-      <PawPrint size={22} opacity={0.18} />
+      <PawPrint size={18} opacity={0.18} />
     </motion.span>
   );
 }
@@ -407,10 +407,10 @@ export function PhilanthropySection() {
       {/* Giant SVG paw watermark — rotates and breathes */}
       <motion.div
         style={{ scale: pawScale, opacity: pawOpacity, rotate: pawRotate }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none w-[280px] h-[280px] md:w-[520px] md:h-[520px]"
         aria-hidden="true"
       >
-        <PawPrint size={520} opacity={0.065} />
+        <PawPrint size={520} opacity={0.065} className="w-full h-full" />
       </motion.div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -593,7 +593,7 @@ export function PhilanthropySection() {
         </motion.div>
 
         {/* Walking paw prints trail */}
-        <div className="flex items-end justify-center gap-5 mt-16" aria-hidden="true">
+        <div className="flex items-end justify-center gap-3 md:gap-5 mt-16" aria-hidden="true">
           {[0, 1, 2, 3, 4].map((i) => (
             <WalkingPaw key={i} index={i} total={5} />
           ))}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import {
   motion,
   useScroll,
@@ -237,14 +237,20 @@ function MagneticCTAButton() {
   const buttonRef = useRef<HTMLAnchorElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [orbiting, setOrbiting] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const springX = useSpring(rotateX, { stiffness: 120, damping: 18 });
   const springY = useSpring(rotateY, { stiffness: 120, damping: 18 });
 
+  useLayoutEffect(() => {
+    setIsTouchDevice('ontouchstart' in window);
+  }, []);
+
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
+      if (isTouchDevice) return;
       const el = buttonRef.current;
       if (!el) return;
       const { left, top, width, height } = el.getBoundingClientRect();
@@ -259,7 +265,7 @@ function MagneticCTAButton() {
         rotateY.set(cx * 18);
       }
     },
-    [rotateX, rotateY]
+    [rotateX, rotateY, isTouchDevice]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -269,12 +275,13 @@ function MagneticCTAButton() {
   }, [rotateX, rotateY]);
 
   useEffect(() => {
+    if (isTouchDevice) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
     // Listen on document to catch 100px radius outside button
     document.addEventListener('mousemove', handleMouseMove);
     return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, [handleMouseMove]);
+  }, [handleMouseMove, isTouchDevice]);
 
   return (
     <motion.div
@@ -302,7 +309,7 @@ function MagneticCTAButton() {
           border: '1px solid rgba(197,149,107,0.2)',
         }}
         whileTap={{ scale: 0.97 }}
-        className="relative inline-flex items-center gap-5 px-12 py-6 group magnetic-glow overflow-hidden"
+        className="relative inline-flex items-center gap-5 px-8 md:px-12 py-4 md:py-6 group magnetic-glow overflow-hidden"
         data-magnetic
       >
         {/* Shimmer sweep */}

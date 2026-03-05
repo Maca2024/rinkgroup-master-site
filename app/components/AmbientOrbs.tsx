@@ -33,7 +33,8 @@ interface Orb {
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
-const ORB_COUNT = 8;
+const ORB_COUNT_DESKTOP = 8;
+const ORB_COUNT_MOBILE = 4;
 const MOUSE_RADIUS = 220;         // pixels — repulsion zone
 const PUSH_STRENGTH = 60;         // max push distance in pixels
 const PUSH_SMOOTHING = 0.06;      // lerp factor per frame
@@ -53,13 +54,15 @@ const ORB_COLORS: Array<[number, number, number]> = [
 
 // ─── Orb factory ───────────────────────────────────────────────────────────────
 
-function createOrbs(): Orb[] {
-  return Array.from({ length: ORB_COUNT }, (_, i) => {
+function createOrbs(isMobile: boolean): Orb[] {
+  const count = isMobile ? ORB_COUNT_MOBILE : ORB_COUNT_DESKTOP;
+  const maxRadius = isMobile ? 150 : 300;
+  return Array.from({ length: count }, (_, i) => {
     const [r, g, b] = ORB_COLORS[i % ORB_COLORS.length];
     return {
       x: 0.05 + Math.random() * 0.90,
       y: 0.05 + Math.random() * 0.90,
-      radius: 100 + Math.random() * 200,
+      radius: Math.min(100 + Math.random() * 200, maxRadius),
       r, g, b,
       baseOpacity: 0.018 + Math.random() * 0.038,
       phaseX: Math.random() * Math.PI * 2,
@@ -79,11 +82,12 @@ function createOrbs(): Orb[] {
 // ─── AmbientOrbs component ─────────────────────────────────────────────────────
 
 export function AmbientOrbs() {
-  const canvasRef  = useRef<HTMLCanvasElement>(null);
-  const orbsRef    = useRef<Orb[]>(createOrbs());
-  const rafRef     = useRef<number>(0);
-  const mouseRef   = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
-  const scrollRef  = useRef<number>(0);
+  const canvasRef     = useRef<HTMLCanvasElement>(null);
+  const orbsRef       = useRef<Orb[]>([]);
+  const rafRef        = useRef<number>(0);
+  const mouseRef      = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const scrollRef     = useRef<number>(0);
+  const wasMobileRef  = useRef<boolean | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -101,6 +105,13 @@ export function AmbientOrbs() {
       canvas.style.width  = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
       if (ctx) ctx.scale(dpr, dpr);
+
+      // Re-create orbs only when crossing the mobile breakpoint
+      const isMobile = window.innerWidth < 768;
+      if (wasMobileRef.current !== isMobile) {
+        wasMobileRef.current = isMobile;
+        orbsRef.current = createOrbs(isMobile);
+      }
     }
 
     resize();
